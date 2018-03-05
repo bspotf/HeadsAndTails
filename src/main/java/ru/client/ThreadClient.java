@@ -74,9 +74,8 @@ public class ThreadClient implements Runnable {
 //                long start = System.currentTimeMillis();
 //                long end = System.currentTimeMillis();
 //                diff[0] = end - start;
-
             }
-            listener.stopListen();
+            listener.interrupt();
             LongStream.of(diff).average();
         } catch (IOException e) {
             e.printStackTrace();
