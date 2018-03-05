@@ -47,12 +47,21 @@ public class ThreadClientHandler implements Runnable {
                             os.write(Commands.BET);
                             bet = Integer.parseInt(is.readUTF());
                         } while (bet <= 0);
-                        int[] res = game.playGame(bet, coinSide);
-                        os.write(Commands.RESULT);
-                        for (int m : res) {
-                            os.write(m);
+                        try {
+                            int[] res = game.playGame(bet, coinSide);
+                            os.write(Commands.RESULT);
+                            for (int m : res) {
+                                os.write(m);
+                            }
+                            break;
+                        } catch (GameException e) {
+                            int exCode = e.getCode();
+                            os.write(exCode);
+                            if (exCode == Commands.ERROR_NULL_BALANCE) {
+                                os.write(Commands.CLOSING_CONNECTION);
+                                break LOOP;
+                            }
                         }
-                        break;
                     case Commands.HISTORY:
                         os.write(Commands.HISTORY);
                         os.writeUTF(game.getHistory());
@@ -71,8 +80,6 @@ public class ThreadClientHandler implements Runnable {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (GameException e) {
             e.printStackTrace();
         } finally {
             disconnect();
