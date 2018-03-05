@@ -48,16 +48,16 @@ public class Game {
 //            boolean cast = (random.nextInt(10) > 5);
             int result;
             if (cast == boolCoinSide) {
-                int gain = (int) (bet * 0.9);
+                int gain = (int) Math.ceil(bet * 0.9);
                 player.addCoins(gain);
                 returnString = "Game result: " + gain + " | Bet on " +
-                        coinSide + " | Balance: " + player.getCoins();
+                        side + " | Balance: " + player.getCoins();
                 addToHistory(returnString);
                 result = Commands.WIN;
             } else {
                 player.addCoins(-bet);
                 returnString = "Game result: " + (-bet) + " | Bet on " +
-                        coinSide + " | Balance: " + player.getCoins();
+                        side + " | Balance: " + player.getCoins();
                 addToHistory(returnString);
                 result = Commands.LOSE;
             }
