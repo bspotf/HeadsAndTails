@@ -15,6 +15,7 @@ public class Game {
     private boolean boolCoinSide;
     private String returnString;
     private final Random random;
+    private String side;
 
     private double multiplier = 1.9;
 
@@ -35,9 +36,11 @@ public class Game {
         switch (coinSide) {
             case Commands.HEAD:
                 boolCoinSide = true;
+                side = "Head";
                 break;
             case Commands.TAIL:
                 boolCoinSide = false;
+                side = "Tail";
                 break;
         }
         if (bet <= player.getCoins()) {
