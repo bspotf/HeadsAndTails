@@ -6,29 +6,27 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 
-/**
- * Created by V on 05.03.2018.
- */
 public class ThreadClientListener extends Thread {
     private DataInputStream is;
     private ThreadClient client;
-    private boolean stoped = false;
+//    private boolean stopped;
 
     public ThreadClientListener(ThreadClient client) throws IOException {
         this.client = client;
         is = new DataInputStream(client.getSocket().getInputStream());
+//        stopped = false;
     }
 
-    public void stopListen() {
-        stoped = true;
-    }
+//    public void stopListen() {
+//        stopped = true;
+//    }
 
     @Override
     public void run() {
         System.out.println("ThreadClientListener initialized");
         try {
             LOOP:
-            while (!stoped) {
+            while (!client.getSocket().isClosed()) {
                 int answer = is.read();
                 switch (answer) {
                     case Commands.HELLO_MESSAGE:

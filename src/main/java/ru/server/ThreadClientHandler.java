@@ -18,7 +18,7 @@ public class ThreadClientHandler implements Runnable {
 
     @Override
     public void run() {
-//Scheduler
+        //Scheduler
         try (DataInputStream is = new DataInputStream(threadSocket.getInputStream());
              DataOutputStream os = new DataOutputStream(threadSocket.getOutputStream())
         ) {
@@ -33,7 +33,6 @@ public class ThreadClientHandler implements Runnable {
             while (!threadSocket.isClosed()) {
                 int entryData = is.read();
 //                String entryData = is.readUTF();
-                System.out.println("The command was " + entryData);
                 switch (entryData) {
                     case Commands.PLAY:
                         int coinSide;
@@ -64,7 +63,7 @@ public class ThreadClientHandler implements Runnable {
                         }
                     case Commands.HISTORY:
                         os.write(Commands.HISTORY);
-                        os.writeUTF(game.getHistory());
+                        os.writeUTF(game.getGameHistory());
                         break;
                     case Commands.QUIT:
                         System.out.println("Closing connection");

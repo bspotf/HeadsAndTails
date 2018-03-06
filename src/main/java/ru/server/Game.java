@@ -4,7 +4,6 @@ import ru.commons.Commands;
 import ru.commons.GameException;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Game {
     private Player player;
@@ -14,7 +13,6 @@ public class Game {
     private int playedGames = 0;
     private boolean boolCoinSide;
     private String returnString;
-    private final Random random;
     private String side;
 
     private double multiplier = 1.9;
@@ -24,7 +22,7 @@ public class Game {
         // Initialize player
         player = new Player(coins);
         history = new ArrayList<String>();
-        random = new Random();
+
     }
 
     public Game() {
@@ -72,7 +70,7 @@ public class Game {
         }
     }
 
-    public String getHistory() {
+    public String getGameHistory() {
         String historyString = "";
         if (history.size() != -1) {
             for (String bet : history) {
@@ -85,6 +83,10 @@ public class Game {
     private void addToHistory(String stats) {
         history.add(playedGames, String.valueOf(stats));
         incrementPlayedGames();
+    }
+
+    public ArrayList<String> getHistoryArray() {
+        return history;
     }
 
     private void incrementPlayedGames() {

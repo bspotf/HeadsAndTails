@@ -10,11 +10,14 @@ import java.util.concurrent.Executors;
 
 public class Server {
 
+    private HistoryService history;
+
     public void start(int port) {
         try (ServerSocket socket = new ServerSocket(port);
              BufferedReader br =
                      new BufferedReader(new InputStreamReader(System.in))) {
             System.out.println("Server socket is initialized.");
+            history = HistoryService.getHistoryService();
             while (!socket.isClosed()) {
                 // Looking for the console commands
                 if (br.ready()) {
