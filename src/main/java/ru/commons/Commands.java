@@ -22,10 +22,13 @@ public class Commands {
     // Result commands
     public static final int WIN = 11;
     public static final int LOSE = 12;
+    public static final int AGAIN = 13;
     // Errors
     public static final int ERROR_WRONG_COMMAND = 100;
     public static final int ERROR_NULL_BALANCE = 101;
     public static final int ERROR_NOT_ENOUGH_MONEY = 102;
+    public static final int ERROR_IS_ALREADY_PLAYED = 103;
+
 
 
 

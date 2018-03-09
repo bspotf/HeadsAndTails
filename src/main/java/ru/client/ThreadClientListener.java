@@ -36,7 +36,7 @@ public class ThreadClientListener extends Thread {
                                         "- To exit the game enter \"quit\"\n");
                         break;
                     case Commands.SIDE:
-                        System.out.println("Enter the side(head or tail)");
+                        System.out.println("Enter the side(heads(h) or tails(t))");
                         break;
                     case Commands.BET:
                         System.out.print("Enter your bet: ");
@@ -49,6 +49,9 @@ public class ThreadClientListener extends Thread {
                         }
                         System.out.println("Result: " + (result[0] == Commands.WIN ?
                                 "WIN" : "LOSE") + " | Balance: " + result[1]);
+                        break;
+                    case Commands.AGAIN:
+                        System.out.println("Enter \"play\" to play again");
                         break;
                     case Commands.HISTORY:
                         System.out.println(is.readUTF());

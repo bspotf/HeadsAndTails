@@ -2,6 +2,7 @@ package ru.server;
 
 import ru.commons.Commands;
 import ru.commons.GameException;
+import ru.commons.GameState;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -11,6 +12,9 @@ import java.net.Socket;
 public class ThreadClientHandler implements Runnable {
 
     private Socket threadSocket;
+    private GameState gameState;
+    private int coinSide;
+    private int bet;
 
     public ThreadClientHandler(Socket client) throws IOException {
         this.threadSocket = client;
@@ -28,49 +32,70 @@ public class ThreadClientHandler implements Runnable {
             // Begin dialogue with server while it is open
             if (!threadSocket.isClosed()) {
                 os.write(Commands.HELLO_MESSAGE);
+                gameState = GameState.IS_READY_TO_PLAY;
             }
-            LOOP:
             while (!threadSocket.isClosed()) {
                 int entryData = is.read();
-//                String entryData = is.readUTF();
                 switch (entryData) {
                     case Commands.PLAY:
-                        int coinSide;
-                        do {
+                        if (gameState == GameState.IS_READY_TO_PLAY) {
                             os.write(Commands.SIDE);
-                            coinSide = is.read();
-                        } while (coinSide != Commands.HEAD &&
-                                coinSide != Commands.TAIL);
-                        int bet;
-                        do {
-                            os.write(Commands.BET);
-                            bet = Integer.parseInt(is.readUTF());
-                        } while (bet <= 0);
-                        try {
-                            int[] res = game.playGame(bet, coinSide);
-                            os.write(Commands.RESULT);
-                            for (int m : res) {
-                                os.write(m);
-                            }
-                            break;
-                        } catch (GameException e) {
-                            int exCode = e.getCode();
-                            os.write(exCode);
-                            if (exCode == Commands.ERROR_NULL_BALANCE) {
-                                os.write(Commands.CLOSING_CONNECTION);
-                                break LOOP;
-                            }
+                            gameState = GameState.IS_WAITING_FOR_SIDE;
+                        } else {
+                            os.write(Commands.ERROR_WRONG_COMMAND);
                         }
+                        break;
+                    case Commands.HEAD:
+                    case Commands.TAIL:
+                        if (gameState == GameState.IS_WAITING_FOR_SIDE) {
+                            coinSide = entryData;
+                            gameState = GameState.IS_WAITING_FOR_BET;
+                            os.write(Commands.BET);
+                        } else {
+                            os.write(Commands.ERROR_WRONG_COMMAND);
+                        }
+                        break;
+                    case Commands.BET:
+                        if (gameState == GameState.IS_WAITING_FOR_BET) {
+                            bet = Integer.parseInt(is.readUTF());
+                            if (bet <= 0) {
+                                os.write(Commands.BET);
+                            } else {
+                                try {
+                                    int[] res = game.playGame(bet, coinSide);
+                                    os.write(Commands.RESULT);
+                                    for (int m : res) {
+                                        os.write(m);
+                                    }
+                                    os.write(Commands.AGAIN);
+                                    gameState = GameState.IS_READY_TO_PLAY;
+                                    break;
+                                } catch (GameException e) {
+                                    int exCode = e.getCode();
+                                    os.write(exCode);
+                                    if (exCode == Commands.ERROR_NULL_BALANCE) {
+                                        os.write(Commands.CLOSING_CONNECTION);
+                                        disconnect();
+                                    }
+                                }
+                            }
+                        } else {
+                            os.write(Commands.ERROR_WRONG_COMMAND);
+                        }
+                        break;
                     case Commands.HISTORY:
-                        os.write(Commands.HISTORY);
-                        os.writeUTF(game.getGameHistory());
+                        if (gameState == GameState.IS_READY_TO_PLAY) {
+                            os.write(Commands.HISTORY);
+                            os.writeUTF(game.getGameHistory());
+                        } else {
+                            os.write(Commands.ERROR_WRONG_COMMAND);
+                        }
                         break;
                     case Commands.QUIT:
                         System.out.println("Closing connection");
                         os.write(Commands.CLOSING_CONNECTION);
                         disconnect();
                         os.flush();
-                        break LOOP;
                     default:
                         os.write(Commands.ERROR_WRONG_COMMAND);
                         break;
@@ -95,5 +120,9 @@ public class ThreadClientHandler implements Runnable {
 //            e.printStackTrace();
         }
         System.out.println(" DONE");
+    }
+
+    private void betAndPlay() {
+
     }
 }

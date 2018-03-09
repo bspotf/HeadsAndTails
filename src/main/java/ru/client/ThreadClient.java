@@ -2,7 +2,10 @@ package ru.client;
 
 import ru.commons.Commands;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.stream.LongStream;
 
@@ -46,22 +49,28 @@ public class ThreadClient implements Runnable {
                 String request = br.readLine();
                 switch (request) {
                     case "play":
+                    case "p":
                         os.write(Commands.PLAY);
                         break;
+                    case "heads":
+                    case "h":
+                        os.write(Commands.HEAD);
+                        break;
+                    case "tails":
+                    case "t":
+                        os.write(Commands.TAIL);
+                        break;
                     case "history":
+                    case "-h":
                         os.write(Commands.HISTORY);
                         break;
                     case "quit":
+                    case "-q":
                         os.write(Commands.QUIT);
-                        break;
-                    case "head":
-                        os.write(Commands.HEAD);
-                        break;
-                    case "tail":
-                        os.write(Commands.TAIL);
                         break;
                     default:
                         if (canBet == true) {
+                            os.write(Commands.BET);
                             os.writeUTF(request);
                             setCanBet(false);
                         } else {
