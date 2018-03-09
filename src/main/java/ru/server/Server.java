@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 
 public class Server {
 
-    private ThreadServerListener listener;
+    private ServerThreadListener listener;
     private HistoryService history;
 
     public void start(int port) {
@@ -16,7 +16,7 @@ public class Server {
             System.out.println("Server socket is initialized.");
             history = HistoryService.getHistoryService();
             int sessionCounter = 0;
-            listener = new ThreadServerListener(socket, history);
+            listener = new ServerThreadListener(socket, history);
             listener.start();
             while (!socket.isClosed()) {
                 // Waiting for the client connection
@@ -24,9 +24,9 @@ public class Server {
                 System.out.println(socket.getInetAddress().getHostName() +
                         " connected");
                 ExecutorService service = Executors.newCachedThreadPool();
-//                Thread t = new Thread(new ThreadClientHandler(client, ++sessionCounter, history));
+//                Thread t = new Thread(new ServerClientHandler(client, ++sessionCounter, history));
 //                t.start();
-                service.execute(new ThreadClientHandler(client, ++sessionCounter, history));
+                service.execute(new ServerClientHandler(client, ++sessionCounter, history));
                 System.out.println("Connection accepted");
 
             }

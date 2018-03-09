@@ -9,16 +9,16 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.stream.LongStream;
 
-public class ThreadClient implements Runnable {
+public class ClientThread implements Runnable {
 
     private static Socket socket;
     private int numOfAppeals;
     private int intervalBetweenAppeals;
     //    public  String threadName;
-    private ThreadClientListener listener;
+    private ClientThreadListener listener;
     private volatile boolean canBet = false;
 
-    public ThreadClient(String host, int port, int appeals, int intBtwAppls) {
+    public ClientThread(String host, int port, int appeals, int intBtwAppls) {
         try {
             // Socket for client to interact with server
             socket = new Socket(host, port);
@@ -41,7 +41,7 @@ public class ThreadClient implements Runnable {
                         new BufferedReader(new InputStreamReader(System.in))) {
             System.out.println("Client os initialized");
             int counter = 0;
-            listener = new ThreadClientListener(this);
+            listener = new ClientThreadListener(this);
             listener.start();
             System.out.println("Client is initialized");
             long[] diff = new long[numOfAppeals];

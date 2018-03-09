@@ -7,15 +7,12 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * Created by V on 10.03.2018.
- */
-public class ThreadServerListener extends Thread {
+public class ServerThreadListener extends Thread {
 
     private ServerSocket socket;
     private HistoryService history;
 
-    public ThreadServerListener(ServerSocket socket, HistoryService history) {
+    public ServerThreadListener(ServerSocket socket, HistoryService history) {
         this.history = history;
         this.socket = socket;
     }

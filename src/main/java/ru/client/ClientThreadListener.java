@@ -6,18 +6,18 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 
-public class ThreadClientListener extends Thread {
+public class ClientThreadListener extends Thread {
     private DataInputStream is;
-    private ThreadClient client;
+    private ClientThread client;
 
-    public ThreadClientListener(ThreadClient client) throws IOException {
+    public ClientThreadListener(ClientThread client) throws IOException {
         this.client = client;
         is = new DataInputStream(client.getSocket().getInputStream());
     }
 
     @Override
     public void run() {
-        System.out.println("ThreadClientListener initialized");
+        System.out.println("ClientThreadListener initialized");
         try {
             LOOP:
             while (!client.getSocket().isClosed()) {

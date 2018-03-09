@@ -9,7 +9,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class ThreadClientHandler implements Runnable {
+public class ServerClientHandler implements Runnable {
 
     private Socket threadSocket;
     private GameState gameState;
@@ -18,7 +18,7 @@ public class ThreadClientHandler implements Runnable {
     private HistoryService historyService;
     private int sessionId;
 
-    public ThreadClientHandler(Socket client, int id, HistoryService historyService) throws IOException {
+    public ServerClientHandler(Socket client, int id, HistoryService historyService) throws IOException {
         this.threadSocket = client;
         this.sessionId = id;
         this.historyService = historyService;

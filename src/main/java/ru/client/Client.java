@@ -3,9 +3,6 @@ package ru.client;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Created by V on 01.03.2018.
- */
 public class Client {
 
     private static int numberOfUsers;
@@ -33,8 +30,8 @@ public class Client {
                 appealsByOneUser + " | intervalBetweenHandles = " + intervalBetweenHandles);
         ExecutorService client = Executors.newFixedThreadPool(numberOfUsers);
         for (int i = 0; i < numberOfUsers; i++) {
-        client.execute(new ThreadClient(host, port, appealsByOneUser,intervalBetweenHandles));
-//            Thread client = new Thread(new ThreadClient(host, port, appealsByOneUser,intervalBetweenHandles));
+            client.execute(new ClientThread(host, port, appealsByOneUser, intervalBetweenHandles));
+//            Thread client = new Thread(new ClientThread(host, port, appealsByOneUser, intervalBetweenHandles));
             Thread.sleep(500);
         }
         client.shutdown();
