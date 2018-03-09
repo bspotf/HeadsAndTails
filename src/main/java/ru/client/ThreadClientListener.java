@@ -9,17 +9,11 @@ import java.io.IOException;
 public class ThreadClientListener extends Thread {
     private DataInputStream is;
     private ThreadClient client;
-//    private boolean stopped;
 
     public ThreadClientListener(ThreadClient client) throws IOException {
         this.client = client;
         is = new DataInputStream(client.getSocket().getInputStream());
-//        stopped = false;
     }
-
-//    public void stopListen() {
-//        stopped = true;
-//    }
 
     @Override
     public void run() {
@@ -36,7 +30,7 @@ public class ThreadClientListener extends Thread {
                                         "- To exit the game enter \"quit\"\n");
                         break;
                     case Commands.SIDE:
-                        System.out.println("Enter the side(heads(h) or tails(t))");
+                        System.out.println("Enter the side: heads(h) or tails(t)");
                         break;
                     case Commands.BET:
                         System.out.print("Enter your bet: ");
@@ -67,6 +61,9 @@ public class ThreadClientListener extends Thread {
                         break;
                     case Commands.ERROR_NOT_ENOUGH_MONEY:
                         System.out.println("You have not enough money to make a bet");
+                        break;
+                    default:
+                        is.readUTF();
                         break;
                 }
             }
