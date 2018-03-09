@@ -1,31 +1,34 @@
 package ru.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HistoryService {
 
-    private static volatile HistoryService historyService;
-    public static ArrayList<ArrayList<String>> history;
+    private static HistoryService instance = new HistoryService();
+    ;
+    private static volatile Map<Integer, ArrayList<String>> history;
 
-
-    private HistoryService(ArrayList<ArrayList<String>> history) {
-        this.history = history;
+    private HistoryService() {
+//        instance = new HistoryService();
+        history = new HashMap<Integer, ArrayList<String>>();
     }
-
 
     public static HistoryService getHistoryService() {
-        if (historyService == null) {
-            synchronized (HistoryService.class) {
-                if (historyService == null) {
-                    historyService = new HistoryService(history);
-                }
-            }
-        }
-        return historyService;
+        return instance;
     }
 
-    public void addToHistory(int sessionId, ArrayList<String> session) {
-        history.add(sessionId, session);
+    public static ArrayList<String> getSessionHistory(Integer sessionId) {
+        if (!history.isEmpty()) {
+            return history.get(sessionId);
+        } else {
+            return null;
+        }
+    }
+
+    public static void add(int sessionId, ArrayList<String> session) {
+        history.put(sessionId, session);
     }
 
 }

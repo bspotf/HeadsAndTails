@@ -15,9 +15,13 @@ public class ThreadClientHandler implements Runnable {
     private GameState gameState;
     private int coinSide;
     private int bet;
+    private HistoryService historyService;
+    private int sessionId;
 
-    public ThreadClientHandler(Socket client) throws IOException {
+    public ThreadClientHandler(Socket client, int id, HistoryService historyService) throws IOException {
         this.threadSocket = client;
+        this.sessionId = id;
+        this.historyService = historyService;
     }
 
     @Override
@@ -28,6 +32,7 @@ public class ThreadClientHandler implements Runnable {
         ) {
             // Initialize the Game
             Game game = new Game();
+            historyService.add(sessionId, game.getHistoryArray());
             System.out.println("Game initialized");
             // Begin dialogue with server while it is open
             if (!threadSocket.isClosed()) {
@@ -102,10 +107,12 @@ public class ThreadClientHandler implements Runnable {
                 }
                 os.flush();
             }
+            os.write(Commands.CLOSING_CONNECTION);
 
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+
             disconnect();
         }
 
