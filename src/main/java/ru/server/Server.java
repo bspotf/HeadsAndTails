@@ -3,8 +3,6 @@ package ru.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Server {
 
@@ -23,10 +21,8 @@ public class Server {
                 Socket client = socket.accept();
                 System.out.println(socket.getInetAddress().getHostName() +
                         " connected");
-                ExecutorService service = Executors.newCachedThreadPool();
-//                Thread t = new Thread(new ServerClientHandler(client, ++sessionCounter, history));
-//                t.start();
-                service.execute(new ServerClientHandler(client, ++sessionCounter, history));
+                Thread session = new Thread(new ServerClientHandler(client, ++sessionCounter, history));
+                session.start();
                 System.out.println("Connection accepted");
 
             }

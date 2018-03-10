@@ -7,7 +7,6 @@ import java.util.Map;
 public class HistoryService {
 
     private static HistoryService instance = new HistoryService();
-    ;
     private static volatile Map<Integer, ArrayList<String>> history;
 
     private HistoryService() {
@@ -19,7 +18,7 @@ public class HistoryService {
         return instance;
     }
 
-    public static ArrayList<String> getSessionHistory(Integer sessionId) {
+    public ArrayList<String> getSessionHistory(Integer sessionId) {
         if (!history.isEmpty()) {
             return history.get(sessionId);
         } else {
@@ -27,7 +26,7 @@ public class HistoryService {
         }
     }
 
-    public static void add(int sessionId, ArrayList<String> session) {
+    public void add(int sessionId, ArrayList<String> session) {
         history.put(sessionId, session);
     }
 

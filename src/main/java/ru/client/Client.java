@@ -1,8 +1,5 @@
 package ru.client;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 public class Client {
 
     private static int numberOfUsers;
@@ -28,12 +25,10 @@ public class Client {
         System.out.println("Launch with default parameters as:\n " +
                 "numberOfUsers = " + numberOfUsers + " | appealsByOneUser = " +
                 appealsByOneUser + " | intervalBetweenHandles = " + intervalBetweenHandles);
-        ExecutorService client = Executors.newFixedThreadPool(numberOfUsers);
         for (int i = 0; i < numberOfUsers; i++) {
-            client.execute(new ClientThread(host, port, appealsByOneUser, intervalBetweenHandles));
-//            Thread client = new Thread(new ClientThread(host, port, appealsByOneUser, intervalBetweenHandles));
+            Thread client = new Thread(new ClientThread(host, port, appealsByOneUser, intervalBetweenHandles));
+            client.start();
             Thread.sleep(500);
         }
-        client.shutdown();
     }
 }
