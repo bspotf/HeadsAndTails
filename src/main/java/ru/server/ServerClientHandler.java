@@ -37,6 +37,7 @@ public class ServerClientHandler implements Runnable {
             // Begin dialogue with server while it is open
             if (!threadSocket.isClosed()) {
                 os.write(Commands.HELLO_MESSAGE);
+                os.write(sessionId);
                 gameState = GameState.IS_READY_TO_PLAY;
             }
             while (!threadSocket.isClosed()) {

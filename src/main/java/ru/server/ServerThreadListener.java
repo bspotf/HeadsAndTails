@@ -22,23 +22,26 @@ public class ServerThreadListener extends Thread {
         // Looking for the console commands
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
             while (!socket.isClosed()) {
-                if (br.ready()) {
-                    String data = br.readLine();
-                    switch (data) {
-                        case "log":
+                String data = br.readLine();
+                switch (data) {
+                    case "log":
+                        try {
                             System.out.print("Session number:");
-                            int session = br.read();
+                            int session = Integer.parseInt(br.readLine());
                             ArrayList<String> sessionHistory = history.getSessionHistory(session);
                             Iterator<String> it = sessionHistory.iterator();
                             while (it.hasNext())
                                 System.out.println(it.next());
-                            break;
-                        case "quit":
-                            System.out.println("Closing server");
-                            socket.close();
-                            break;
-                    }
+                        } catch (NullPointerException e) {
+                            System.out.println("No game with that id");
+                        }
+                        break;
+                    case "quit":
+                        System.out.println("Closing server");
+                        socket.close();
+                        break;
                 }
+
             }
         } catch (IOException e) {
             e.printStackTrace();

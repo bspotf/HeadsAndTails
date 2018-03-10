@@ -24,6 +24,8 @@ public class ClientThreadListener extends Thread {
                 int answer = is.read();
                 switch (answer) {
                     case Commands.HELLO_MESSAGE:
+                        int id = is.read();
+                        System.out.println("Game session id: " + id);
                         System.out.println(
                                 "       **************\n       Heads or Tails\n       **************\n" +
                                         "- To begin the game enter \"play\"\n- To view games history enter \"history\"\n" +

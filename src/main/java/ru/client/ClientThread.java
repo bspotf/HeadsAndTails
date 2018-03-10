@@ -18,14 +18,14 @@ public class ClientThread implements Runnable {
     private ClientThreadListener listener;
     private volatile boolean canBet = false;
 
-    public ClientThread(String host, int port, int appeals, int intBtwAppls) {
+    public ClientThread(String host, int port, int numOfAppeals, int intervalBetweenAppeals) {
         try {
             // Socket for client to interact with server
             socket = new Socket(host, port);
             System.out.println("Client connected to socket");
             Thread.sleep(1000);
-            this.numOfAppeals = appeals;
-            this.intervalBetweenAppeals = intBtwAppls;
+            this.numOfAppeals = numOfAppeals;
+            this.intervalBetweenAppeals = intervalBetweenAppeals;
 
         } catch (Exception e) {
             e.printStackTrace();
