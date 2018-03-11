@@ -7,21 +7,15 @@ import java.util.ArrayList;
 
 public class Game {
     private Player player;
-//    private HistoryService history;
 
     private static ArrayList<String> history;
     private int playedGames = 0;
     private boolean boolCoinSide;
-    private String returnString;
     private String side;
 
-    private double multiplier = 1.9;
-
-
     public Game(int coins) {
-        // Initialize player
         player = new Player(coins);
-        history = new ArrayList<String>();
+        history = new ArrayList<>();
 
     }
 
@@ -43,8 +37,8 @@ public class Game {
         }
         if (bet <= player.getCoins()) {
             boolean cast = (Math.random() < 0.5);
-//            boolean cast = (random.nextInt(10) > 5);
             int result;
+            String returnString;
             if (cast == boolCoinSide) {
                 int gain = (int) Math.ceil(bet * 0.9);
                 player.addCoins(gain);
@@ -62,22 +56,22 @@ public class Game {
             return new int[]{result, player.getCoins()};
         } else {
             if (player.getCoins() == 0) {
-//                return "Your balance is zero.\nThe end.";
             throw new GameException(Commands.ERROR_NULL_BALANCE);
             }
-//            return new int[]{Commands.ERROR_NOT_ENOUGH_MONEY, player.getCoins()};
             throw new GameException(Commands.ERROR_NOT_ENOUGH_MONEY);
         }
     }
 
     public String getGameHistory() {
-        String historyString = "";
+        StringBuilder historyString = new StringBuilder();
         if (history.size() != -1) {
             for (String bet : history) {
-                historyString += bet + "\n";
+                historyString.append(bet).append("\n");
             }
-        } else historyString = "No results yet";
-        return historyString;
+        } else {
+            historyString = new StringBuilder("No results yet");
+        }
+        return historyString.toString();
     }
 
     private void addToHistory(String stats) {
@@ -91,10 +85,6 @@ public class Game {
 
     private void incrementPlayedGames() {
         playedGames++;
-    }
-
-    public int getPlayedGames() {
-        return playedGames;
     }
 
 }

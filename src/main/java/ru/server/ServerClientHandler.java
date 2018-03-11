@@ -14,7 +14,6 @@ public class ServerClientHandler implements Runnable {
     private Socket threadSocket;
     private GameState gameState;
     private int coinSide;
-    private int bet;
     private HistoryService historyService;
     private int sessionId;
 
@@ -63,7 +62,7 @@ public class ServerClientHandler implements Runnable {
                         break;
                     case Commands.BET:
                         if (gameState == GameState.IS_WAITING_FOR_BET) {
-                            bet = Integer.parseInt(is.readUTF());
+                            int bet = Integer.parseInt(is.readUTF());
                             if (bet <= 0) {
                                 os.write(Commands.BET);
                             } else {
@@ -111,7 +110,7 @@ public class ServerClientHandler implements Runnable {
             os.write(Commands.CLOSING_CONNECTION);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("[Error] " + e.getMessage());
         } finally {
 
             disconnect();
@@ -121,16 +120,13 @@ public class ServerClientHandler implements Runnable {
 
     private void disconnect() {
         try {
-            System.out.println("Closing socket");
+            System.out.print("Closing socket: ");
             threadSocket.close();
+            System.out.println(" DONE");
         } catch (IOException e) {
-            System.err.println("Socket closing error");
-//            e.printStackTrace();
+            System.err.println("[Error] " + e.getMessage());
         }
-        System.out.println(" DONE");
-    }
-
-    private void betAndPlay() {
 
     }
+
 }

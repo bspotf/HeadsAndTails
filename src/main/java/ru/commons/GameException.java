@@ -17,7 +17,6 @@ public class GameException extends Exception {
         }
     }
 
-
     public int getCode() {
         return errorCode;
     }

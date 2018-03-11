@@ -19,7 +19,6 @@ public class ClientThreadListener extends Thread {
     public void run() {
         System.out.println("ClientThreadListener initialized");
         try {
-            LOOP:
             while (!client.getSocket().isClosed()) {
                 int answer = is.read();
                 switch (answer) {
@@ -54,7 +53,8 @@ public class ClientThreadListener extends Thread {
                         break;
                     case Commands.CLOSING_CONNECTION:
                         System.out.println("Closing connection");
-                        break LOOP;
+                        client.getSocket().close();
+                        break;
                     case Commands.ERROR_WRONG_COMMAND:
                         System.out.println("Wrong command. Please try again");
                         break;
@@ -69,12 +69,13 @@ public class ClientThreadListener extends Thread {
                         break;
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
+            System.err.println("[Error] " + e.getMessage());
         } finally {
             try {
                 is.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("[Error] " + e.getMessage());
             }
         }
     }

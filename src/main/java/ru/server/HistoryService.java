@@ -10,7 +10,6 @@ public class HistoryService {
     private static volatile Map<Integer, ArrayList<String>> history;
 
     private HistoryService() {
-//        instance = new HistoryService();
         history = new HashMap<Integer, ArrayList<String>>();
     }
 

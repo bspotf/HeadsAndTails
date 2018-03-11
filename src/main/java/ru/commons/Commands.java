@@ -11,14 +11,12 @@ public class Commands {
     // Exit command
     public static final int CLOSING_CONNECTION = 8;
     public static final int QUIT = 9;
-
     // Game commands
     public static final int PLAY = 10;
     public static final int BET = 11;
     public static final int SIDE = 12;
     public static final int HEAD = 13;
     public static final int TAIL = 14;
-
     // Result commands
     public static final int WIN = 11;
     public static final int LOSE = 12;
@@ -27,10 +25,4 @@ public class Commands {
     public static final int ERROR_WRONG_COMMAND = 100;
     public static final int ERROR_NULL_BALANCE = 101;
     public static final int ERROR_NOT_ENOUGH_MONEY = 102;
-    public static final int ERROR_IS_ALREADY_PLAYED = 103;
-
-
-
-
-
 }

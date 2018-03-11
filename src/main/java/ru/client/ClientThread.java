@@ -7,28 +7,24 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.stream.LongStream;
 
 public class ClientThread implements Runnable {
 
     private static Socket socket;
     private int numOfAppeals;
     private int intervalBetweenAppeals;
-    //    public  String threadName;
     private ClientThreadListener listener;
     private volatile boolean canBet = false;
 
     public ClientThread(String host, int port, int numOfAppeals, int intervalBetweenAppeals) {
         try {
-            // Socket for client to interact with server
             socket = new Socket(host, port);
             System.out.println("Client connected to socket");
             Thread.sleep(1000);
             this.numOfAppeals = numOfAppeals;
             this.intervalBetweenAppeals = intervalBetweenAppeals;
-
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[Error] " + e.getMessage());
         }
     }
 
@@ -36,7 +32,6 @@ public class ClientThread implements Runnable {
     public void run() {
         try (
                 DataOutputStream os = new DataOutputStream(socket.getOutputStream());
-//                DataInputStream is = new DataInputStream(socket.getInputStream());
                 BufferedReader br =
                         new BufferedReader(new InputStreamReader(System.in))) {
             System.out.println("Client os initialized");
@@ -46,37 +41,39 @@ public class ClientThread implements Runnable {
             System.out.println("Client is initialized");
             long[] diff = new long[numOfAppeals];
             while (!socket.isClosed() /*&& (counter++ < numOfAppeals)*/) {
-                String request = br.readLine();
-                switch (request) {
-                    case "play":
-                    case "p":
-                        os.write(Commands.PLAY);
-                        break;
-                    case "heads":
-                    case "h":
-                        os.write(Commands.HEAD);
-                        break;
-                    case "tails":
-                    case "t":
-                        os.write(Commands.TAIL);
-                        break;
-                    case "history":
-                    case "-h":
-                        os.write(Commands.HISTORY);
-                        break;
-                    case "quit":
-                    case "-q":
-                        os.write(Commands.QUIT);
-                        break;
-                    default:
-                        if (canBet == true) {
-                            os.write(Commands.BET);
-                            os.writeUTF(request);
-                            setCanBet(false);
-                        } else {
-                            System.out.println("Wrong command. Please try again");
-                        }
-                        break;
+                if (br.ready()) {
+                    String request = br.readLine();
+                    switch (request) {
+                        case "play":
+                        case "p":
+                            os.write(Commands.PLAY);
+                            break;
+                        case "heads":
+                        case "h":
+                            os.write(Commands.HEAD);
+                            break;
+                        case "tails":
+                        case "t":
+                            os.write(Commands.TAIL);
+                            break;
+                        case "history":
+                        case "-h":
+                            os.write(Commands.HISTORY);
+                            break;
+                        case "quit":
+                        case "-q":
+                            os.write(Commands.QUIT);
+                            break;
+                        default:
+                            if (canBet == true) {
+                                os.write(Commands.BET);
+                                os.writeUTF(request);
+                                setCanBet(false);
+                            } else {
+                                System.out.println("Wrong command. Please try again");
+                            }
+                            break;
+                    }
                 }
                 os.flush();
 //                Thread.sleep(intervalBetweenAppeals);
@@ -86,23 +83,29 @@ public class ClientThread implements Runnable {
             }
             System.out.println("Closing connection");
             listener.interrupt();
-            LongStream.of(diff).average();
+//            LongStream.of(diff).average();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("[Error] " + e.getMessage());
+        } catch (NullPointerException e) {
+            System.err.println("[Error] No connection to server");
         } finally {
-            disconnect();
+            if (socket != null) {
+                disconnect();
+            }
         }
     }
 
     private void disconnect() {
         try {
-            System.out.println("Closing socket");
+            System.out.print("Closing socket: ");
             socket.close();
+            System.out.println(" DONE");
         } catch (IOException e) {
-            System.err.println("Socket closing error");
-//            e.printStackTrace();
+            System.err.println("[Error] " + e.getMessage());
+        } catch (NullPointerException e) {
+            System.err.println("[Error] No connection to server");
         }
-        System.out.println(" DONE");
+
     }
 
     public Socket getSocket() {
