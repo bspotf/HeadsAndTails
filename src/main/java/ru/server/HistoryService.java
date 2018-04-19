@@ -7,10 +7,10 @@ import java.util.Map;
 public class HistoryService {
 
     private static HistoryService instance = new HistoryService();
-    private static Map<Integer, ArrayList<String>> history;
+    private static Map<Integer, ArrayList<String>> history = new HashMap<>();;
 
     private HistoryService() {
-        history = new HashMap<>();
+
     }
 
     public static HistoryService getHistoryService() {
